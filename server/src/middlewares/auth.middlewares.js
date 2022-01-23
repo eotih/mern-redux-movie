@@ -1,12 +1,19 @@
-const jwt = require("jwt-then");
+const jwt = require('jsonwebtoken');
 
-const isAuth = async (req, res, next) => {
+const isAuthenticated = async (req, res, next) => {
     try {
-        if (!req.headers.authorization) throw "Forbidden!!";
-        const token = req.headers.authorization.split(" ")[1];
-        const payload = await jwt.verify(token, process.env.SECRET);
-        req.payload = payload;
-        next();
+        const authorization = req.headers['x-access-token'] || req.headers['authorization'];
+        if (!authorization) throw "Unauthorized";
+        const token = authorization.slice(7, authorization.length); // Bearer XXXXXX
+        jwt.verify(token, process.env.JWT_SECRET || 'somethingsecret', (err, decoded) => {
+            if (err) {
+                return res.status(401).json({
+                    message: 'Invalid token',
+                });
+            }
+            req.user = decoded;
+            next();
+        });
     } catch (err) {
         res.status(401).json({
             message: "Forbidden 🚫🚫🚫",
@@ -15,7 +22,7 @@ const isAuth = async (req, res, next) => {
 };
 const isAdmin = async (req, res, next) => {
     try {
-        if(!req.user && req.user.role !== "admin") throw "Forbidden!!";
+        if (!req.user && req.user.role !== "admin") throw "Forbidden!!";
         next();
     }
     catch (err) {
@@ -24,4 +31,4 @@ const isAdmin = async (req, res, next) => {
         });
     }
 };
-module.exports = {isAdmin, isAuth};
+module.exports = { isAdmin, isAuthenticated };

@@ -5,6 +5,7 @@ class errorHandlers {
                 if (typeof err === 'string') {
                     res.status(400).json({
                         message: err,
+                        status: 400,
                     });
                 }
                 else {
