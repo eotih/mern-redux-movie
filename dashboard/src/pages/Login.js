@@ -1,5 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Link as RouterLink } from 'react-router-dom';
 // material
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import { Card, Stack, Link, Container, Typography } from '@mui/material';
 // layouts
@@ -9,6 +12,8 @@ import Page from '../components/Page';
 import { MHidden } from '../components/@material-extend';
 import { LoginForm } from '../components/authentication/login';
 import AuthSocial from '../components/authentication/AuthSocial';
+import { toastOpen } from '../components/Toast';
+import { login, response } from '../redux/reducers/auth.reducers';
 
 // ----------------------------------------------------------------------
 
@@ -40,8 +45,20 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Login() {
+  const { renderToast, handleOpenToast, openToast } = toastOpen();
+  const dispatch = useDispatch();
+  const { message, status } = useSelector(response);
+  useEffect(() => {
+    if (message) {
+      handleOpenToast({
+        message,
+        color: status === 200 ? 'success' : 'error'
+      })();
+    }
+  }, [message]);
   return (
     <RootStyle title="Login | Minimal-UI">
+      {openToast.isOpen === true && renderToast()}
       <AuthLayout>
         Don’t have an account? &nbsp;
         <Link underline="none" variant="subtitle2" component={RouterLink} to="/register">
@@ -68,7 +85,7 @@ export default function Login() {
           </Stack>
           <AuthSocial />
 
-          <LoginForm />
+          <LoginForm login={login} dispatch={dispatch} />
 
           <MHidden width="smUp">
             <Typography variant="body2" align="center" sx={{ mt: 3 }}>

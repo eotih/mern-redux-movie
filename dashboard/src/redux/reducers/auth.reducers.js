@@ -15,16 +15,11 @@ const authSlice = createSlice({
       const { data } = await axios.post('/auth/login', action.payload);
       state.message = data.message;
       state.status = data.status;
-    },
-    register: async (state, action) => {
-      const { data } = await axios.post('/auth/register', action.payload);
-      state.message = data.message;
-      state.status = data.status;
     }
   }
 });
 
-export const { login, register } = authSlice.actions;
+export const { login } = authSlice.actions;
 
 export const response = (state) => state.authentication;
 

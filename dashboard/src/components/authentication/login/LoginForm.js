@@ -1,8 +1,9 @@
 import * as Yup from 'yup';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
-import { useDispatch, useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
+
 import { Icon } from '@iconify/react';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
@@ -17,23 +18,22 @@ import {
   FormControlLabel
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import { login, response } from '../../../redux/reducers/auth.reducers';
 
 // ----------------------------------------------------------------------
+LoginForm.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  login: PropTypes.func.isRequired
+};
 
-export default function LoginForm() {
-  const dispatch = useDispatch();
+export default function LoginForm({ dispatch, login }) {
   const navigate = useNavigate();
-  const { message } = useSelector(response);
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
     password: Yup.string().required('Password is required')
   });
-  useEffect(() => {
-    console.log('message', message);
-  }, [message]);
+
   const formik = useFormik({
     initialValues: {
       email: '',
