@@ -42,11 +42,11 @@ export default function LoginForm({ dispatch, login }) {
     validationSchema: LoginSchema,
     onSubmit: () => {
       dispatch(login(formik.values));
-      navigate('/');
+      navigate('/dashboard/app');
     }
   });
 
-  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } = formik;
+  const { errors, touched, values, handleSubmit, getFieldProps } = formik;
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
@@ -97,13 +97,7 @@ export default function LoginForm({ dispatch, login }) {
           </Link>
         </Stack>
 
-        <LoadingButton
-          fullWidth
-          size="large"
-          type="submit"
-          variant="contained"
-          loading={isSubmitting}
-        >
+        <LoadingButton fullWidth size="large" type="submit" variant="contained">
           Login
         </LoadingButton>
       </Form>

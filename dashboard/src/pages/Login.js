@@ -13,7 +13,8 @@ import { MHidden } from '../components/@material-extend';
 import { LoginForm } from '../components/authentication/login';
 import AuthSocial from '../components/authentication/AuthSocial';
 import { toastOpen } from '../components/Toast';
-import { login, response } from '../redux/reducers/auth.reducers';
+import { response } from '../redux/reducers/auth.reducers';
+import { login } from '../redux/actions/auth.actions';
 
 // ----------------------------------------------------------------------
 
@@ -54,10 +55,11 @@ export default function Login() {
         message,
         color: status === 200 ? 'success' : 'error'
       })();
+      window.location.reload();
     }
   }, [message]);
   return (
-    <RootStyle title="Login | Minimal-UI">
+    <RootStyle title="Login | MOVIE">
       {openToast.isOpen === true && renderToast()}
       <AuthLayout>
         Don’t have an account? &nbsp;

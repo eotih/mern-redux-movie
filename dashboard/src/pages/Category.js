@@ -1,17 +1,23 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { filter } from 'lodash';
 import { Icon } from '@iconify/react';
-import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
+import { useFormik, Form, FormikProvider } from 'formik';
+import { useSelector, useDispatch } from 'react-redux';
 // material
 import {
   Card,
   Table,
   Stack,
-  Avatar,
   Button,
   Checkbox,
+  Switch,
+  TextField,
+  Modal,
+  Box,
   TableRow,
   TableBody,
   TableCell,
@@ -21,42 +27,31 @@ import {
   TablePagination
 } from '@mui/material';
 // components
+import { LoadingButton } from '@mui/lab';
 import Page from '../components/Page';
-import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
 import SearchNotFound from '../components/SearchNotFound';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../components/_dashboard/user';
+import {
+  CategoryListHead,
+  CategoryListToolbar,
+  CategoryMoreMenu
+} from '../components/_dashboard/category';
+import { getComparator, styleModal } from '../components/TableComponent';
+import { toastOpen } from '../components/Toast';
+import { response } from '../redux/reducers/category.reducers';
+import { show, create, update, deleteCategory } from '../redux/actions/category.actions';
 //
-import USERLIST from '../_mocks_/user';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'slug', label: 'Slug', alignRight: false },
+  { id: 'isActive', label: 'Active', alignRight: false },
   { id: '' }
 ];
 
 // ----------------------------------------------------------------------
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
 
 function applySortFilter(array, comparator, query) {
   const stabilizedThis = array.map((el, index) => [el, index]);
@@ -71,13 +66,37 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function User() {
+export default function CategoryList() {
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [open, setOpen] = useState(false);
+  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true);
+  const { renderToast, handleOpenToast, openToast } = toastOpen();
+  const dispatch = useDispatch();
+  const { message, status, category } = useSelector(response);
+
+  const handleClear = () => {
+    formik.resetForm();
+    setSubmitting(false);
+    handleClose();
+  };
+  useEffect(() => {
+    dispatch(show());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (message) {
+      handleOpenToast({
+        message,
+        color: status === 200 ? 'success' : 'error'
+      })();
+    }
+  }, [message]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -87,7 +106,7 @@ export default function User() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = category.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -125,31 +144,86 @@ export default function User() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const formik = useFormik({
+    initialValues: {
+      name: ''
+    },
+    onSubmit: (values) => {
+      dispatch(create(values));
+      handleClear();
+    }
+  });
+  const toggleActive = (data) => {
+    const newCategory = { ...data, isActive: !data.isActive };
+    dispatch(update(newCategory));
+  };
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const { handleSubmit, getFieldProps, isSubmitting, setSubmitting } = formik;
+  const renderModal = () => (
+    <>
+      <Modal
+        open={open}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <FormikProvider value={formik}>
+          <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+            <Box sx={styleModal}>
+              <Stack spacing={2}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  Add Category
+                </Typography>
+                <TextField fullWidth label="Name" {...getFieldProps('name')} />
+                <LoadingButton
+                  loading={isSubmitting}
+                  fullWidth
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                >
+                  Add Category
+                </LoadingButton>
+              </Stack>
+            </Box>
+          </Form>
+        </FormikProvider>
+      </Modal>
+    </>
+  );
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - category.length) : 0;
 
-  const isUserNotFound = filteredUsers.length === 0;
+  const filteredCategory = applySortFilter(category, getComparator(order, orderBy), filterName);
+
+  const isUserNotFound = filteredCategory.length === 0;
 
   return (
-    <Page title="User | MOVIE">
+    <Page title="Category | MOVIE">
+      {openToast.isOpen && renderToast()}
+      {open && renderModal()}
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            User
+            Category
           </Typography>
           <Button
             variant="contained"
+            onClick={handleOpen}
             component={RouterLink}
             to="#"
             startIcon={<Icon icon={plusFill} />}
           >
-            New User
+            New Category
           </Button>
         </Stack>
 
         <Card>
-          <UserListToolbar
+          <CategoryListToolbar
             numSelected={selected.length}
             filterName={filterName}
             onFilterName={handleFilterByName}
@@ -158,26 +232,26 @@ export default function User() {
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
               <Table>
-                <UserListHead
+                <CategoryListHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={category.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers
+                  {filteredCategory
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
-                      const { id, name, role, status, company, avatarUrl, isVerified } = row;
+                      const { _id, name, slug, isActive } = row;
                       const isItemSelected = selected.indexOf(name) !== -1;
 
                       return (
                         <TableRow
                           hover
-                          key={id}
+                          key={_id}
                           tabIndex={-1}
                           role="checkbox"
                           selected={isItemSelected}
@@ -189,28 +263,25 @@ export default function User() {
                               onChange={(event) => handleClick(event, name)}
                             />
                           </TableCell>
-                          <TableCell component="th" scope="row" padding="none">
-                            <Stack direction="row" alignItems="center" spacing={2}>
-                              <Avatar alt={name} src={avatarUrl} />
-                              <Typography variant="subtitle2" noWrap>
-                                {name}
-                              </Typography>
-                            </Stack>
-                          </TableCell>
-                          <TableCell align="left">{company}</TableCell>
-                          <TableCell align="left">{role}</TableCell>
-                          <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
+                          <TableCell align="left">{name}</TableCell>
+                          <TableCell align="left">{slug}</TableCell>
                           <TableCell align="left">
-                            <Label
-                              variant="ghost"
-                              color={(status === 'banned' && 'error') || 'success'}
-                            >
-                              {sentenceCase(status)}
-                            </Label>
+                            <Switch
+                              checked={isActive}
+                              onChange={() => {
+                                dispatch(toggleActive(row));
+                              }}
+                            />
                           </TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu />
+                            <CategoryMoreMenu
+                              data={row}
+                              styleModal={styleModal}
+                              onDelete={deleteCategory}
+                              onEdit={update}
+                              dispatch={dispatch}
+                            />
                           </TableCell>
                         </TableRow>
                       );
@@ -237,7 +308,7 @@ export default function User() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={category.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
