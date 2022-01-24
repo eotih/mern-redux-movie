@@ -6,23 +6,31 @@ const { userValidate } = require('../helpers/validation.helpers');
 class AuthController {
     async login(req, res, next) {
         const { email, password } = req.body;
-        const user = await User.findOne({ email });
-        if (!user) throw "User not found";
-        const isValidPassword = bcrypt.compareSync(password, user.password);
+
+        const { error } = userValidate(req.body);
+        if (error) throw error.details[0].message;
+
+        const userExists = await User.findOne({ email });
+        if (!userExists) throw "User not found";
+
+        const isValidPassword = bcrypt.compareSync(password, userExists.password);
         if (!isValidPassword) throw "Invalid password";
+
         res.status(200).json({
-            token: generateToken(user),
+            token: generateToken(userExists),
             message: 'Login successfully',
             status: 200
         });
     }
     async register(req, res, next) {
         const { name, email, password, mobile } = req.body;
+        
         const { error } = userValidate(req.body);
         if (error) throw error.details[0].message;
 
         const userExists = await User.findOne({ email });
         if (userExists) throw "Email này đã tồn tại.";
+
         const newUser = new User({
             name,
             email,

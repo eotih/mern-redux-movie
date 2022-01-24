@@ -9,7 +9,7 @@ const User = new Schema(
         image: { type: String, default: '' },
         mobile: { type: String },
         googleId: { type: String },
-        isAdmin: { type: Boolean, default: false, required: true },
+        isAdmin: { type: Boolean, default: false, required: true }
     },
     {
         timestamps: true,

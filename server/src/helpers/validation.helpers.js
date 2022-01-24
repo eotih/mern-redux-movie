@@ -10,6 +10,13 @@ class Validate {
         });
         return userSchema.validate(data);
     }
+    categoryValidate = data => {
+        const categorySchema = Joi.object({
+            name: Joi.string().min(3).required(),
+            isActive: Joi.boolean()
+        });
+        return categorySchema.validate(data);
+    }
 }
 
 module.exports = new Validate();

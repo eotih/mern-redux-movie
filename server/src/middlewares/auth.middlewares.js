@@ -22,12 +22,12 @@ const isAuthenticated = async (req, res, next) => {
 };
 const isAdmin = async (req, res, next) => {
     try {
-        if (!req.user && req.user.role !== "admin") throw "Forbidden!!";
+        if (!req.user && !req.user.isAdmin) throw "Access Denied!!";
         next();
     }
     catch (err) {
         res.status(401).json({
-            message: "Forbidden 🚫🚫🚫",
+            message: "Access Denied 🚫🚫🚫",
         });
     }
 };
