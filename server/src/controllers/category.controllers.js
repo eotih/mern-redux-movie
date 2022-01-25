@@ -26,8 +26,8 @@ class CategoryController {
     async update(req, res, next) {
         const { name, isActive } = req.body;
 
-        // const { error } = categoryValidate(req.body);
-        // if (error) throw error.details[0].message;
+        const { error } = categoryValidate({ name, isActive });
+        if (error) throw error.details[0].message;
         
         const cateExists = await Category.findOne({ _id: req.params.id });
         if (!cateExists) throw "Category này không tồn tại.";

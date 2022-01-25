@@ -20,6 +20,7 @@ const Movie = new Schema(
 
         rate: { type: Number, required: true },
         rateCount: { type: Number, default: 0 },
+        IMDbScore: { type: Number, default: 0, max: 10 }, // Điểm IMDb được tính theo thang điểm 10
         status: { type: String, required: true },
 
         isHot: { type: Boolean, default: false },

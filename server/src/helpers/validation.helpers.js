@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 class Validate {
-    userValidate = data => {
+    userValidate = (data) => {
         const userSchema = Joi.object({
             name: Joi.string().min(3).max(30).required(),
             email: Joi.string().email().lowercase().required(),
@@ -10,12 +10,20 @@ class Validate {
         });
         return userSchema.validate(data);
     }
-    categoryValidate = data => {
+    categoryValidate = (data) => {
         const categorySchema = Joi.object({
             name: Joi.string().min(3).required(),
             isActive: Joi.boolean()
         });
         return categorySchema.validate(data);
+    }
+    actorValidate = (data) => {
+        const actorSchema = Joi.object({
+            name: Joi.string().min(3).required(),
+            image: Joi.string().required(),
+            DateOfBirth: Joi.date().required()
+        });
+        return actorSchema.validate(data);
     }
 }
 
