@@ -5,6 +5,7 @@ import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
 import Login from './pages/Login';
 import Category from './pages/Category';
+import Actor from './pages/Actor';
 import Register from './pages/Register';
 import DashboardApp from './pages/DashboardApp';
 import Products from './pages/Products';
@@ -25,6 +26,7 @@ export default function Router() {
         { path: 'user', element: <User /> },
         { path: 'products', element: <Products /> },
         { path: 'category', element: <Category /> },
+        { path: 'actor', element: <Actor /> },
         { path: 'blog', element: <Blog /> }
       ]
     },
