@@ -150,7 +150,9 @@ export default function CategoryList() {
     },
     onSubmit: (values) => {
       dispatch(create(values));
-      handleClear();
+      setTimeout(() => {
+        handleClear();
+      }, 1000);
     }
   });
   const toggleActive = (data) => {
@@ -266,12 +268,7 @@ export default function CategoryList() {
                           <TableCell align="left">{name}</TableCell>
                           <TableCell align="left">{slug}</TableCell>
                           <TableCell align="left">
-                            <Switch
-                              checked={isActive}
-                              onChange={() => {
-                                dispatch(toggleActive(row));
-                              }}
-                            />
+                            <Switch checked={isActive} onChange={() => toggleActive(row)} />
                           </TableCell>
 
                           <TableCell align="right">

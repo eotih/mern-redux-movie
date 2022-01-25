@@ -41,7 +41,11 @@ export default function CategoryMoreMenu({ onDelete, styleModal, onEdit, data, d
     setOpen(true);
     formik.setValues(data);
   };
-
+  const handleClear = () => {
+    formik.resetForm();
+    setSubmitting(false);
+    handleClose();
+  };
   const handleDelete = async (data) => {
     if (confirm('Are you sure you want to delete this category?')) {
       await dispatch(onDelete(data));
@@ -56,9 +60,12 @@ export default function CategoryMoreMenu({ onDelete, styleModal, onEdit, data, d
     },
     onSubmit: async (values) => {
       await dispatch(onEdit(values));
+      setTimeout(() => {
+        handleClear();
+      }, 1000);
     }
   });
-  const { handleSubmit, getFieldProps, isSubmitting } = formik;
+  const { handleSubmit, getFieldProps, isSubmitting, setSubmitting } = formik;
 
   const renderModal = () => (
     <>
