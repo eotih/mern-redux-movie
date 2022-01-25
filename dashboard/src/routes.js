@@ -6,6 +6,7 @@ import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 import Login from './pages/Login';
 import Category from './pages/Category';
 import Actor from './pages/Actor';
+import Movie from './pages/Movie';
 import Register from './pages/Register';
 import DashboardApp from './pages/DashboardApp';
 import Products from './pages/Products';
@@ -27,6 +28,7 @@ export default function Router() {
         { path: 'products', element: <Products /> },
         { path: 'category', element: <Category /> },
         { path: 'actor', element: <Actor /> },
+        { path: 'movie', element: <Movie /> },
         { path: 'blog', element: <Blog /> }
       ]
     },
