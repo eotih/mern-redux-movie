@@ -25,6 +25,28 @@ class Validate {
         });
         return actorSchema.validate(data);
     }
+    movieValidate = (data) => {
+        const movieSchema = Joi.object({
+            name: Joi.string().min(3).required(),
+            slug: Joi.string().required(),
+            description: Joi.string().required(),
+            image: Joi.string().required(),
+            country: Joi.string().required(),
+            categories: Joi.array().required(),
+            releaseDate: Joi.date().required(),
+            duration: Joi.number().required(),
+            rate: Joi.number().required(),
+            rateCount: Joi.number().required(),
+            IMDbScore: Joi.number().required(),
+            status: Joi.string().required(),
+            isHot: Joi.boolean(),
+            isFresh: Joi.boolean(),
+            isComingSoon: Joi.boolean(),
+            isActive: Joi.boolean(),
+            isSeries: Joi.boolean()
+        });
+        return movieSchema.validate(data);
+    }
 }
 
 module.exports = new Validate();
