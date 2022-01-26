@@ -8,19 +8,21 @@ const Movie = new Schema(
         slug: { type: String, slug: 'name', unique: true },
         description: { type: String, required: true },
         image: { type: String, default: '' },
-        country: { type: String, required: true },
-        categories: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
-        releaseDate: { type: Date, required: true },
-        
-        director: { type: String, required: true },
-        actors: [{ type: Schema.Types.ObjectId, ref: 'Actor' }],
-        
         trailerUrl: { type: String, default: '' },
         movieUrl: { type: String, default: '' },
+        
+        country: { type: String, required: true },
+        releaseDate: { type: Date, required: true },
+        director: { type: String, required: true },
         duration: { type: Number, required: true },
+
+        actors: [{ type: Schema.Types.ObjectId, ref: 'Actor' }],
+        categories: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
+        
 
         rate: { type: Number, required: true },
         rateCount: { type: Number, default: 0 },
+        
         IMDbScore: { type: Number, default: 0, max: 10 }, // Điểm IMDb được tính theo thang điểm 10
         status: { type: String, required: true },
 

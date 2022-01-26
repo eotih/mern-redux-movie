@@ -1,13 +1,13 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/user.models');
 const { generateToken } = require('../services/token.services');
-const { userValidate } = require('../helpers/validation.helpers');
+const { userValidate, loginValidate } = require('../helpers/validation.helpers');
 
 class AuthController {
     async login(req, res, next) {
         const { email, password } = req.body;
 
-        const { error } = userValidate(req.body);
+        const { error } = loginValidate(req.body);
         if (error) throw error.details[0].message;
 
         const userExists = await User.findOne({ email });
@@ -24,7 +24,7 @@ class AuthController {
     }
     async register(req, res, next) {
         const { name, email, password, mobile } = req.body;
-        
+
         const { error } = userValidate(req.body);
         if (error) throw error.details[0].message;
 
@@ -43,7 +43,7 @@ class AuthController {
             message: 'User created successfully!',
         });
     }
-    
+
     async loginWithGoogle(req, res, next) {
         const { email, name, imageUrl, googleId } = req.body;
         const userExists = await User.findOne({ email: email });

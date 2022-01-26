@@ -10,6 +10,13 @@ class Validate {
         });
         return userSchema.validate(data);
     }
+    loginValidate = (data) => {
+        const userSchema = Joi.object({
+            email: Joi.string().email().lowercase().required(),
+            password: Joi.string().min(1).max(32).required()
+        });
+        return userSchema.validate(data);
+    }
     categoryValidate = (data) => {
         const categorySchema = Joi.object({
             name: Joi.string().min(3).required(),
@@ -35,8 +42,6 @@ class Validate {
             categories: Joi.array().required(),
             releaseDate: Joi.date().required(),
             duration: Joi.number().required(),
-            rate: Joi.number().required(),
-            rateCount: Joi.number().required(),
             IMDbScore: Joi.number().required(),
             status: Joi.string().required(),
             isHot: Joi.boolean(),
