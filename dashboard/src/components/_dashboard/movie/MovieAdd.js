@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Container,
   Stack,
@@ -13,14 +14,22 @@ import {
   Grid,
   Avatar
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { LoadingButton } from '@mui/lab';
 import Page from '../../Page';
+import { toastOpen } from '../../Toast';
+import { responseCategory, responseActor, responseMovie } from '../../../redux/reducers';
 import { movieValidate } from '../../../helpers/validate.helpers';
+import { showCategory, showActor, createMovie } from '../../../redux/actions';
 
 export default function AddPost() {
-  const [category] = useState([]);
+  const { renderToast, handleOpenToast, openToast } = toastOpen();
+  const dispatch = useDispatch();
+  const { category } = useSelector(responseCategory);
+  const { actor } = useSelector(responseActor);
+  const { message, status } = useSelector(responseMovie);
 
   const handelChangeActor = (event, value) => {
     const newValue = value.map((item) => item._id);
@@ -30,6 +39,18 @@ export default function AddPost() {
     const newValue = value.map((item) => item._id);
     setFieldValue('categories', newValue);
   };
+  useEffect(() => {
+    dispatch(showCategory());
+    dispatch(showActor());
+  }, [dispatch]);
+  useEffect(() => {
+    if (message) {
+      handleOpenToast({
+        message,
+        color: status === 200 ? 'success' : 'error'
+      })();
+    }
+  }, [message]);
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -53,13 +74,14 @@ export default function AddPost() {
     },
     ValidationSchema: movieValidate,
     onSubmit: (values) => {
-      console.log(values);
+      dispatch(createMovie(values));
     }
   });
 
   const { handleSubmit, touched, errors, getFieldProps, setFieldValue } = formik;
   return (
     <Page title="Dashboard: Add Post ">
+      {openToast.isOpen && renderToast()}
       <Container maxWidth="xl">
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
           <Typography variant="h3" sx={{ mb: 2 }}>
@@ -69,7 +91,7 @@ export default function AddPost() {
         <FormikProvider value={formik}>
           <Form autoComplete="off" onSubmit={handleSubmit}>
             <Box sx={{ flexGrow: 1 }}>
-              <Grid container spacing={2}>
+              <Grid container spacing={2} mb={2}>
                 <Grid item xs={12} md={8}>
                   <Card>
                     <CardHeader
@@ -155,7 +177,7 @@ export default function AddPost() {
                       <Autocomplete
                         multiple
                         id="tags-outlined"
-                        options={category}
+                        options={actor}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
                         getOptionLabel={(option) => option.name}
                         onChange={(event, value) => {
@@ -247,15 +269,30 @@ export default function AddPost() {
                     <Stack direction={{ xs: 'row' }} spacing={2}>
                       <Stack direction={{ xs: 'column' }} spacing={2}>
                         <FormGroup>
-                          <FormControlLabel control={<Switch />} label="Hot" />
-                          <FormControlLabel control={<Switch />} label="New" />
-                          <FormControlLabel control={<Switch />} label="Coming Soon" />
+                          <FormControlLabel
+                            control={<Switch {...getFieldProps('isHot')} />}
+                            label="Hot"
+                          />
+                          <FormControlLabel
+                            control={<Switch {...getFieldProps('isFresh')} />}
+                            label="New"
+                          />
+                          <FormControlLabel
+                            control={<Switch {...getFieldProps('isComingSoon')} />}
+                            label="Coming Soon"
+                          />
                         </FormGroup>
                       </Stack>
                       <Stack direction={{ xs: 'row' }} spacing={2}>
                         <FormGroup>
-                          <FormControlLabel control={<Switch />} label="Active" />
-                          <FormControlLabel control={<Switch />} label="Series" />
+                          <FormControlLabel
+                            control={<Switch {...getFieldProps('isActive')} />}
+                            label="Active"
+                          />
+                          <FormControlLabel
+                            control={<Switch {...getFieldProps('isSeries')} />}
+                            label="Series"
+                          />
                         </FormGroup>
                       </Stack>
                     </Stack>

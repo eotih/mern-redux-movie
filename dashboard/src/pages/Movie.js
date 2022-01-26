@@ -5,7 +5,6 @@ import { Icon } from '@iconify/react';
 import { useState, useEffect } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
-import { sentenceCase } from 'change-case';
 import { useSelector, useDispatch } from 'react-redux';
 // material
 import {
@@ -31,9 +30,8 @@ import SearchNotFound from '../components/SearchNotFound';
 import { MovieListHead, MovieListToolbar, MovieMoreMenu } from '../components/_dashboard/movie';
 import { getComparator } from '../components/TableComponent';
 import Label from '../components/Label';
-import { toastOpen } from '../components/Toast';
-import { response } from '../redux/reducers/movie.reducers';
-import { show, update, deleteMovie } from '../redux/actions/movie.actions';
+import { responseMovie } from '../redux/reducers';
+import { showMovie, updateMovie, deleteMovie } from '../redux/actions';
 import { fDate } from '../utils/formatTime';
 //
 
@@ -73,22 +71,12 @@ export default function MovieList() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const { renderToast, handleOpenToast, openToast } = toastOpen();
   const dispatch = useDispatch();
-  const { message, status, movie } = useSelector(response);
+  const { movie } = useSelector(responseMovie);
 
   useEffect(() => {
-    dispatch(show());
+    dispatch(showMovie());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (message) {
-      handleOpenToast({
-        message,
-        color: status === 200 ? 'success' : 'error'
-      })();
-    }
-  }, [message]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -138,7 +126,7 @@ export default function MovieList() {
 
   const toggleActive = (data) => {
     const newCategory = { ...data, isActive: !data.isActive };
-    dispatch(update(newCategory));
+    dispatch(updateMovie(newCategory));
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - movie.length) : 0;
@@ -149,7 +137,6 @@ export default function MovieList() {
 
   return (
     <Page title="Movie | MOVIE">
-      {openToast.isOpen && renderToast()}
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
@@ -193,6 +180,7 @@ export default function MovieList() {
                         name,
                         country,
                         image,
+                        categories,
                         releaseDate,
                         rate,
                         IMDbScore,
@@ -224,6 +212,13 @@ export default function MovieList() {
                               </Typography>
                             </Stack>
                           </TableCell>
+                          <TableCell align="left">
+                            {categories.map((res) => (
+                              <Label variant="filled" color="info" key={res._id}>
+                                {res.name}
+                              </Label>
+                            ))}
+                          </TableCell>
                           <TableCell align="left">{country}</TableCell>
                           <TableCell align="left">{fDate(releaseDate)}</TableCell>
                           <TableCell align="left">{rate}</TableCell>
@@ -236,7 +231,7 @@ export default function MovieList() {
                               variant="ghost"
                               color={(isSeries === false && 'error') || 'success'}
                             >
-                              {sentenceCase(isSeries)}
+                              {isSeries ? 'Movie' : 'Series'}
                             </Label>
                           </TableCell>
 

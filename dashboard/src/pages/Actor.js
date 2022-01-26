@@ -34,8 +34,8 @@ import SearchNotFound from '../components/SearchNotFound';
 import { ActorListHead, ActorListToolbar, ActorMoreMenu } from '../components/_dashboard/actor';
 import { getComparator, styleModal } from '../components/TableComponent';
 import { toastOpen } from '../components/Toast';
-import { response } from '../redux/reducers/actor.reducers';
-import { show, create, update, deleteActor } from '../redux/actions/actor.actions';
+import { responseActor } from '../redux/reducers';
+import { showActor, createActor, updateActor, deleteActor } from '../redux/actions';
 import { fDate } from '../utils/formatTime';
 //
 
@@ -75,7 +75,7 @@ export default function ActorList() {
   const handleOpen = () => setOpen(true);
   const { renderToast, handleOpenToast, openToast } = toastOpen();
   const dispatch = useDispatch();
-  const { message, status, actor } = useSelector(response);
+  const { message, status, actor } = useSelector(responseActor);
 
   const handleClear = () => {
     formik.resetForm();
@@ -83,7 +83,7 @@ export default function ActorList() {
     handleClose();
   };
   useEffect(() => {
-    dispatch(show());
+    dispatch(showActor());
   }, [dispatch]);
 
   useEffect(() => {
@@ -148,7 +148,7 @@ export default function ActorList() {
       DateOfBirth: ''
     },
     onSubmit: (values) => {
-      dispatch(create(values));
+      dispatch(createActor(values));
       setTimeout(() => {
         handleClear();
       }, 1000);
@@ -287,7 +287,7 @@ export default function ActorList() {
                               data={row}
                               styleModal={styleModal}
                               onDelete={deleteActor}
-                              onEdit={update}
+                              onEdit={updateActor}
                               dispatch={dispatch}
                             />
                           </TableCell>

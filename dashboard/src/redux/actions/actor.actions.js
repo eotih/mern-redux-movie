@@ -6,7 +6,7 @@ const ACTOR_CREATE = 'actor/create';
 const ACTOR_UPDATE = 'actor/update';
 const ACTOR_DELETE = 'actor/delete';
 
-const show = createAsyncThunk(ACTOR_SHOW, async (thunkAPI) => {
+const showActor = createAsyncThunk(ACTOR_SHOW, async (thunkAPI) => {
   try {
     const { data } = await axios.get('/actor');
     return data;
@@ -15,7 +15,7 @@ const show = createAsyncThunk(ACTOR_SHOW, async (thunkAPI) => {
   }
 });
 
-const create = createAsyncThunk(ACTOR_CREATE, async (payload, thunkAPI) => {
+const createActor = createAsyncThunk(ACTOR_CREATE, async (payload, thunkAPI) => {
   try {
     const { data } = await axios.post('/actor', payload);
     return data;
@@ -24,7 +24,7 @@ const create = createAsyncThunk(ACTOR_CREATE, async (payload, thunkAPI) => {
   }
 });
 
-const update = createAsyncThunk(ACTOR_UPDATE, async (payload, thunkAPI) => {
+const updateActor = createAsyncThunk(ACTOR_UPDATE, async (payload, thunkAPI) => {
   try {
     const { data } = await axios.put(`/actor/${payload._id}`, payload);
     return data;
@@ -42,4 +42,4 @@ const deleteActor = createAsyncThunk(ACTOR_DELETE, async (payload, thunkAPI) => 
   }
 });
 
-export { show, create, update, deleteActor };
+export { showActor, createActor, updateActor, deleteActor };

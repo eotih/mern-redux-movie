@@ -6,7 +6,7 @@ const MOVIE_CREATE = 'movie/create';
 const MOVIE_UPDATE = 'movie/update';
 const MOVIE_DELETE = 'movie/delete';
 
-const show = createAsyncThunk(MOVIE_SHOW, async (thunkAPI) => {
+const showMovie = createAsyncThunk(MOVIE_SHOW, async (thunkAPI) => {
   try {
     const { data } = await axios.get('/movie');
     return data;
@@ -15,7 +15,7 @@ const show = createAsyncThunk(MOVIE_SHOW, async (thunkAPI) => {
   }
 });
 
-const create = createAsyncThunk(MOVIE_CREATE, async (payload, thunkAPI) => {
+const createMovie = createAsyncThunk(MOVIE_CREATE, async (payload, thunkAPI) => {
   try {
     const { data } = await axios.post('/movie', payload);
     return data;
@@ -24,7 +24,7 @@ const create = createAsyncThunk(MOVIE_CREATE, async (payload, thunkAPI) => {
   }
 });
 
-const update = createAsyncThunk(MOVIE_UPDATE, async (payload, thunkAPI) => {
+const updateMovie = createAsyncThunk(MOVIE_UPDATE, async (payload, thunkAPI) => {
   try {
     const { data } = await axios.put(`/movie/${payload._id}`, payload);
     return data;
@@ -42,4 +42,4 @@ const deleteMovie = createAsyncThunk(MOVIE_DELETE, async (payload, thunkAPI) => 
   }
 });
 
-export { show, create, update, deleteMovie };
+export { showMovie, createMovie, updateMovie, deleteMovie };

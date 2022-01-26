@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { createSlice } from '@reduxjs/toolkit';
-import { show, create, update, deleteCategory } from '../actions/category.actions';
+import { showCategory, createCategory, updateCategory, deleteCategory } from '../actions';
 
 const initialState = {
   category: [],
@@ -13,21 +13,21 @@ const authSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: {
-    [show.fulfilled]: (state, action) => {
+    [showCategory.fulfilled]: (state, action) => {
       state.category = action.payload || [];
     },
-    [create.fulfilled]: (state, action) => {
+    [createCategory.fulfilled]: (state, action) => {
       const { category, message, status } = action.payload;
       state.category = [...state.category, category];
       state.message = message;
       state.status = status;
     },
-    [create.rejected]: (state, action) => {
+    [createCategory.rejected]: (state, action) => {
       const { message, status } = action.payload;
       state.message = message;
       state.status = status;
     },
-    [update.fulfilled]: (state, action) => {
+    [updateCategory.fulfilled]: (state, action) => {
       const { message, status } = action.payload;
       state.category = state.category.map((category) =>
         category._id === action.payload.category._id ? action.payload.category : category
@@ -35,7 +35,7 @@ const authSlice = createSlice({
       state.message = message;
       state.status = status;
     },
-    [update.rejected]: (state, action) => {
+    [updateCategory.rejected]: (state, action) => {
       const { message, status } = action.payload;
       state.message = message;
       state.status = status;
@@ -56,6 +56,6 @@ const authSlice = createSlice({
   }
 });
 
-export const response = (state) => state.category;
+export const responseCategory = (state) => state.category;
 
 export default authSlice.reducer;

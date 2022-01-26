@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { createSlice } from '@reduxjs/toolkit';
-import { show, create, update, deleteMovie } from '../actions/movie.actions';
+import { showMovie, createMovie, updateMovie, deleteMovie } from '../actions/movie.actions';
 
 const initialState = {
   movie: [],
@@ -13,21 +13,21 @@ const authSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: {
-    [show.fulfilled]: (state, action) => {
+    [showMovie.fulfilled]: (state, action) => {
       state.movie = action.payload || [];
     },
-    [create.fulfilled]: (state, action) => {
+    [createMovie.fulfilled]: (state, action) => {
       const { movie, message, status } = action.payload;
       state.movie = [...state.movie, movie];
       state.message = message;
       state.status = status;
     },
-    [create.rejected]: (state, action) => {
+    [createMovie.rejected]: (state, action) => {
       const { message, status } = action.payload;
       state.message = message;
       state.status = status;
     },
-    [update.fulfilled]: (state, action) => {
+    [updateMovie.fulfilled]: (state, action) => {
       const { message, status } = action.payload;
       state.movie = state.movie.map((movie) =>
         movie._id === action.payload.movie._id ? action.payload.movie : movie
@@ -35,7 +35,7 @@ const authSlice = createSlice({
       state.message = message;
       state.status = status;
     },
-    [update.rejected]: (state, action) => {
+    [updateMovie.rejected]: (state, action) => {
       const { message, status } = action.payload;
       state.message = message;
       state.status = status;
@@ -54,6 +54,6 @@ const authSlice = createSlice({
   }
 });
 
-export const response = (state) => state.movie;
+export const responseMovie = (state) => state.movie;
 
 export default authSlice.reducer;

@@ -1,6 +1,5 @@
 // routes
-// import { Provider } from 'react-redux';
-// import { store } from './redux/store';
+import * as React from 'react';
 import Router from './routes';
 // theme
 import ThemeConfig from './theme';
@@ -13,9 +12,9 @@ import useToken from './services/token.services';
 import { BaseOptionChartStyle } from './components/charts/BaseOptionChart';
 
 // ----------------------------------------------------------------------
-
 export default function App() {
   const { token } = useToken();
+
   if (!token) {
     return (
       <ThemeConfig>

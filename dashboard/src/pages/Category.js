@@ -38,8 +38,13 @@ import {
 } from '../components/_dashboard/category';
 import { getComparator, styleModal } from '../components/TableComponent';
 import { toastOpen } from '../components/Toast';
-import { response } from '../redux/reducers/category.reducers';
-import { show, create, update, deleteCategory } from '../redux/actions/category.actions';
+import { responseCategory } from '../redux/reducers/category.reducers';
+import {
+  showCategory,
+  createCategory,
+  updateCategory,
+  deleteCategory
+} from '../redux/actions/category.actions';
 //
 
 // ----------------------------------------------------------------------
@@ -78,7 +83,7 @@ export default function CategoryList() {
   const handleOpen = () => setOpen(true);
   const { renderToast, handleOpenToast, openToast } = toastOpen();
   const dispatch = useDispatch();
-  const { message, status, category } = useSelector(response);
+  const { message, status, category } = useSelector(responseCategory);
 
   const handleClear = () => {
     formik.resetForm();
@@ -86,7 +91,7 @@ export default function CategoryList() {
     handleClose();
   };
   useEffect(() => {
-    dispatch(show());
+    dispatch(showCategory());
   }, [dispatch]);
 
   useEffect(() => {
@@ -149,7 +154,7 @@ export default function CategoryList() {
       name: ''
     },
     onSubmit: (values) => {
-      dispatch(create(values));
+      dispatch(createCategory(values));
       setTimeout(() => {
         handleClear();
       }, 1000);
@@ -157,7 +162,7 @@ export default function CategoryList() {
   });
   const toggleActive = (data) => {
     const newCategory = { ...data, isActive: !data.isActive };
-    dispatch(update(newCategory));
+    dispatch(updateCategory(newCategory));
   };
 
   const { handleSubmit, getFieldProps, isSubmitting, setSubmitting } = formik;
@@ -276,7 +281,7 @@ export default function CategoryList() {
                               data={row}
                               styleModal={styleModal}
                               onDelete={deleteCategory}
-                              onEdit={update}
+                              onEdit={updateCategory}
                               dispatch={dispatch}
                             />
                           </TableCell>

@@ -6,6 +6,7 @@ import { alpha, styled } from '@mui/material/styles';
 import { Box, Stack, AppBar, Toolbar, IconButton } from '@mui/material';
 // components
 import { MHidden } from '../../components/@material-extend';
+import ThemeSwitch from '../../components/ThemeSwitch';
 //
 import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
@@ -56,6 +57,7 @@ export default function DashboardNavbar({ onOpenSidebar }) {
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 1.5 }}>
+          <ThemeSwitch />
           <LanguagePopover />
           <NotificationsPopover />
           <AccountPopover />
