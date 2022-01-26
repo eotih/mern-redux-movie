@@ -1,4 +1,3 @@
-import * as Yup from 'yup';
 import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
@@ -18,6 +17,7 @@ import {
   FormControlLabel
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { LoginValidate } from '../../../helpers/validate.helpers';
 
 // ----------------------------------------------------------------------
 LoginForm.propTypes = {
@@ -29,17 +29,12 @@ export default function LoginForm({ dispatch, login }) {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
-  const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required')
-  });
-
   const formik = useFormik({
     initialValues: {
       email: '',
       password: ''
     },
-    validationSchema: LoginSchema,
+    validationSchema: LoginValidate,
     onSubmit: () => {
       dispatch(login(formik.values));
       navigate('/dashboard/app');

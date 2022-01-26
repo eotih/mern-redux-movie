@@ -13,7 +13,8 @@ import Products from './pages/Products';
 import Blog from './pages/Blog';
 import User from './pages/User';
 import NotFound from './pages/Page404';
-
+//
+import { MovieAdd } from './components/_dashboard/movie';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -29,6 +30,7 @@ export default function Router() {
         { path: 'category', element: <Category /> },
         { path: 'actor', element: <Actor /> },
         { path: 'movie', element: <Movie /> },
+        { path: 'movie/add', element: <MovieAdd /> },
         { path: 'blog', element: <Blog /> }
       ]
     },

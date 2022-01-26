@@ -158,7 +158,7 @@ export default function MovieList() {
           <Button
             variant="contained"
             component={RouterLink}
-            to="#"
+            to="add"
             startIcon={<Icon icon={plusFill} />}
           >
             New Movie
