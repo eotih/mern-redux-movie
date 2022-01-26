@@ -3,14 +3,18 @@ const { movieValidate } = require('../helpers/validation.helpers');
 
 class MovieController {
     async show(req, res, next) {
-        const listMovie = await Movie.find();
+        const listMovie = await Movie
+            .find()
+            .sort({ createdAt: -1 })
+            .populate('categories')
+            .populate('actors')
         res.status(200).json(listMovie);
     }
     async create(req, res, next) {
         const { name } = req.body;
 
-        const { error } = movieValidate(req.body);
-        if (error) throw error.details[0].message;
+        // const { error } = movieValidate(req.body);
+        // if (error) throw error.details[0].message;
 
         const exitsMovie = await Movie.findOne({ name });
         if (exitsMovie) throw "Movie này đã tồn tại.";
@@ -25,12 +29,12 @@ class MovieController {
     }
     async update(req, res, next) {
 
-        const { error } = movieValidate(req.body);
-        if (error) throw error.details[0].message;
-        
+        // const { error } = movieValidate(req.body);
+        // if (error) throw error.details[0].message;
+
         const updatedMovie = await Movie.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!updatedMovie) throw "Movie này không tồn tại.";
-        
+
         res.status(200).json({
             movie: updatedMovie,
             message: 'Movie updated successfully!',

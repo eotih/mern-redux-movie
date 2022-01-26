@@ -35,7 +35,6 @@ class Validate {
     movieValidate = (data) => {
         const movieSchema = Joi.object({
             name: Joi.string().min(3).required(),
-            slug: Joi.string().required(),
             description: Joi.string().required(),
             image: Joi.string().required(),
             country: Joi.string().required(),

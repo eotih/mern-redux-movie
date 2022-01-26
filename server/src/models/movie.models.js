@@ -20,7 +20,7 @@ const Movie = new Schema(
         categories: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
         
 
-        rate: { type: Number, required: true },
+        rate: { type: Number, required: true, default: 0 },
         rateCount: { type: Number, default: 0 },
         
         IMDbScore: { type: Number, default: 0, max: 10 }, // Điểm IMDb được tính theo thang điểm 10
