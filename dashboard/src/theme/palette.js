@@ -39,7 +39,7 @@ const GREY = {
 const GREY_DARK = {
   0: '#FFFFFF',
   100: '#F9FAFB',
-  200: '#11324D',
+  200: '#2c2c2c',
   300: '#DFE3E8',
   400: '#C4CDD5',
   500: '#919EAB',
@@ -206,9 +206,10 @@ const paletteDark = {
   grey: GREY_DARK,
   gradients: GRADIENTS_DARK,
   chart: CHART_COLORS,
-  divider: '#fffde7',
+  divider: '#fff59d',
   text: { primary: '#fff', secondary: '#fff', disabled: GREY[500] },
-  background: { paper: '#11324D', default: '#2c2c2c', neutral: GREY[200] },
+  // background: { paper: '#11324D', default: '#2c2c2c', neutral: GREY[200] },
+  background: { paper: '#2c2c2c', default: '#23272A', neutral: GREY[200] },
   action: {
     active: GREY[600],
     hover: GREY[500_8],

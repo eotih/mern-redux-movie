@@ -23,7 +23,6 @@ export default function ThemeConfig({ children }) {
   const { themeColor, setTheme } = useTheme();
   const themeOptions = useMemo(
     () => ({
-      // palette change by color mode
       palette: themeColor === 'light' ? palette : paletteDark,
       shape,
       typography,
