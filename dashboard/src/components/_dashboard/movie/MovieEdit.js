@@ -7,9 +7,11 @@ import {
   TextField,
   Autocomplete,
   FormGroup,
+  Link,
   FormControlLabel,
   Switch,
   CardHeader,
+  Breadcrumbs,
   Card,
   Grid,
   Avatar
@@ -18,18 +20,20 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { LoadingButton } from '@mui/lab';
+import { useParams } from 'react-router-dom';
 import Page from '../../Page';
 import { toastOpen } from '../../Toast';
 import { responseCategory, responseActor, responseMovie } from '../../../redux/reducers';
 import { movieValidate } from '../../../helpers/validate.helpers';
-import { showCategory, showActor, createMovie } from '../../../redux/actions';
+import { showCategory, showActor, updateMovie, showUrl } from '../../../redux/actions';
 
-export default function AddMovie() {
+export default function UpdateMovie() {
+  const { slug } = useParams();
   const { renderToast, handleOpenToast, openToast } = toastOpen();
   const dispatch = useDispatch();
   const { category } = useSelector(responseCategory);
   const { actor } = useSelector(responseActor);
-  const { message, status } = useSelector(responseMovie);
+  const { message, status, movie } = useSelector(responseMovie);
 
   const handelChangeActor = (event, value) => {
     const newValue = value.map((item) => item._id);
@@ -42,7 +46,12 @@ export default function AddMovie() {
   useEffect(() => {
     dispatch(showCategory());
     dispatch(showActor());
+    dispatch(showUrl(slug));
   }, [dispatch]);
+  useEffect(() => {
+    setFieldValue(movie);
+  }, [movie]);
+
   useEffect(() => {
     if (message) {
       handleOpenToast({
@@ -53,6 +62,7 @@ export default function AddMovie() {
   }, [message]);
   const formik = useFormik({
     initialValues: {
+      _id: '',
       name: '',
       image: '',
       description: '',
@@ -74,19 +84,29 @@ export default function AddMovie() {
     },
     ValidationSchema: movieValidate,
     onSubmit: (values) => {
-      dispatch(createMovie(values));
+      dispatch(updateMovie(values));
       resetForm();
     }
   });
 
   const { handleSubmit, touched, errors, resetForm, getFieldProps, setFieldValue } = formik;
   return (
-    <Page title="Dashboard: Add Movie ">
+    <Page title="Dashboard: Update Movie ">
       {openToast.isOpen && renderToast()}
       <Container maxWidth="xl">
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
           <Typography variant="h3" sx={{ mb: 2 }}>
-            Create new Movie
+            Edit Movie
+            <Breadcrumbs aria-label="breadcrumb">
+              <Link underline="hover" color="inherit" href="/">
+                Dashboard
+              </Link>
+              <Link underline="hover" color="inherit" href="../">
+                Movie
+              </Link>
+              <Typography color="text.primary">Edit</Typography>
+              <Typography color="text.primary">{slug}</Typography>
+            </Breadcrumbs>
           </Typography>
         </Stack>
         <FormikProvider value={formik}>

@@ -1,6 +1,12 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { createSlice } from '@reduxjs/toolkit';
-import { showMovie, createMovie, updateMovie, deleteMovie } from '../actions/movie.actions';
+import {
+  showMovie,
+  createMovie,
+  updateMovie,
+  deleteMovie,
+  showUrl
+} from '../actions/movie.actions';
 
 const initialState = {
   movie: [],
@@ -14,6 +20,9 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: {
     [showMovie.fulfilled]: (state, action) => {
+      state.movie = action.payload || [];
+    },
+    [showUrl.fulfilled]: (state, action) => {
       state.movie = action.payload || [];
     },
     [createMovie.fulfilled]: (state, action) => {

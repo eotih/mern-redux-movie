@@ -14,7 +14,7 @@ import Blog from './pages/Blog';
 import User from './pages/User';
 import NotFound from './pages/Page404';
 //
-import { MovieAdd } from './components/_dashboard/movie';
+import { MovieAdd, MovieEdit } from './components/_dashboard/movie';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -31,6 +31,7 @@ export default function Router() {
         { path: 'actor', element: <Actor /> },
         { path: 'movie', element: <Movie /> },
         { path: 'movie/add', element: <MovieAdd /> },
+        { path: 'movie/edit/:slug', element: <MovieEdit /> },
         { path: 'blog', element: <Blog /> }
       ]
     },

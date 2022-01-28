@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from '../../helpers/axios.helpers';
 
 const MOVIE_SHOW = 'movie/show';
+const MOVIE_URL = 'movie/getSlug';
 const MOVIE_CREATE = 'movie/create';
 const MOVIE_UPDATE = 'movie/update';
 const MOVIE_DELETE = 'movie/delete';
@@ -9,6 +10,14 @@ const MOVIE_DELETE = 'movie/delete';
 const showMovie = createAsyncThunk(MOVIE_SHOW, async (thunkAPI) => {
   try {
     const { data } = await axios.get('/movie');
+    return data;
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err.response.data);
+  }
+});
+const showUrl = createAsyncThunk(MOVIE_URL, async (payload, thunkAPI) => {
+  try {
+    const { data } = await axios.get(`/movie/${payload}`);
     return data;
   } catch (err) {
     return thunkAPI.rejectWithValue(err.response.data);
@@ -42,4 +51,4 @@ const deleteMovie = createAsyncThunk(MOVIE_DELETE, async (payload, thunkAPI) => 
   }
 });
 
-export { showMovie, createMovie, updateMovie, deleteMovie };
+export { showMovie, createMovie, updateMovie, deleteMovie, showUrl };
