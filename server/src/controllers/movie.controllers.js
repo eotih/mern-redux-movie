@@ -10,6 +10,15 @@ class MovieController {
             .populate('actors')
         res.status(200).json(listMovie);
     }
+
+    async findBySlug(req, res, next) {
+        const listMovie = await Movie
+            .findOne({ slug: req.params.slug })
+            .populate('categories')
+            .populate('actors')
+        res.status(200).json(listMovie);
+    }
+
     async create(req, res, next) {
         const { name } = req.body;
 
