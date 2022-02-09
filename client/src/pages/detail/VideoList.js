@@ -3,7 +3,6 @@ import { useParams } from 'react-router';
 import tmdbApi from '../../api/tmdbApi';
 
 const VideoList = ({ id }) => {
-
     const { category } = useParams();
     const [videos, setVideos] = useState([]);
 
@@ -17,17 +16,14 @@ const VideoList = ({ id }) => {
 
     return (
         <>
-            {
-                videos.map((item, i) => (
-                    <Video key={i} item={item} />
-                ))
-            }
+            {videos.map((item, i) => (
+                <Video key={i} item={item} />
+            ))}
         </>
     );
 }
 
 const Video = ({ item }) => {
-
     const iframeRef = useRef(null);
 
     useEffect(() => {

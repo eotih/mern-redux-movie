@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
 import SwiperCore, { Autoplay } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Button, { OutlineButton } from "../button/Button";
@@ -7,10 +8,21 @@ import Modal, { ModalContent } from "../modal/Modal";
 import tmdbApi, { category, movieType } from "../../api/tmdbApi";
 import apiConfig from "../../api/apiConfig";
 import "./hero-slide.scss";
+import { responseMovie } from "../../redux/reducers";
+import { showMovie } from "../../redux/actions";
 
 const HeroSlide = () => {
-  SwiperCore.use([Autoplay]);
+  const dispatch = useDispatch();
+  const { movie } = useSelector(responseMovie);
   const [movieItems, setMovieItems] = useState([]);
+
+  SwiperCore.use([Autoplay]);
+
+  useEffect(() => {
+    dispatch(showMovie());
+  }, [dispatch]);
+
+  console.log(movie);
 
   useEffect(() => {
     const getMovies = async () => {
@@ -34,15 +46,12 @@ const HeroSlide = () => {
         grabCursor={true}
         spaceBetween={0}
         slidesPerView={1}
-        // autoplay={{delay: 3000}}
+        autoplay={{ delay: 3000 }}
       >
         {movieItems.map((item, index) => (
           <SwiperSlide key={index}>
             {({ isActive }) => (
-              <HeroSlideItem
-                item={item}
-                className={`${isActive ? "active" : ""}`}
-              />
+              <HeroSlideItem item={item} className={isActive ? "active" : ""} />
             )}
           </SwiperSlide>
         ))}

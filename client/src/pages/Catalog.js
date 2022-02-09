@@ -5,7 +5,6 @@ import { category as cate } from '../api/tmdbApi';
 import MovieGrid from '../components/movie-grid/MovieGrid';
 
 const Catalog = () => {
-
     const { category } = useParams();
 
     return (

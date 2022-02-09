@@ -7,12 +7,12 @@ const axios = Axios.create({
     Authorization: token
   }
 });
-axios.interceptors.request.use(async (config) => config);
+// axios.interceptors.request.use(async (config) => config);
 
-axios.interceptors.response.use((response) => {
-  if (response && response.data) return response.data;
-  return response;
-}, (error) => {
-  throw error;
-});
+// axios.interceptors.response.use((response) => {
+//   if (response && response.data) return response.data;
+//   return response;
+// }, (error) => {
+//   throw error;
+// });
 export default axios;

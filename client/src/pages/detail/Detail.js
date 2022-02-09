@@ -8,9 +8,7 @@ import VideoList from './VideoList';
 import MovieList from '../../components/movie-list/MovieList';
 
 const Detail = () => {
-
     const { category, id } = useParams();
-
     const [item, setItem] = useState(null);
 
     useEffect(() => {
